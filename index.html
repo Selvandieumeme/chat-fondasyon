@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Fondasyon</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="login-container">
+    <h2>Antre nan chat la</h2>
+    <input type="email" id="email" placeholder="Imel ou" required/>
+    <input type="password" id="password" placeholder="Modpas ou" required/>
+    <button onclick="login()">Konekte</button>
+  </div>
+
+  <div id="chat-container" style="display:none;">
+    <select id="channel-select">
+      <option value="education">Éducation</option>
+      <option value="fobas">FOBAS</option>
+      <option value="jeunes">Jeunes</option>
+      <option value="chrestiens">Chrétiens</option>
+      <option value="enfants">Enfants</option>
+      <option value="adultes">Adultes</option>
+      <option value="nordouest">Nord-Ouest</option>
+      <option value="marerouge">Mare-Rouge</option>
+      <option value="haiti">Haïti</option>
+    </select>
+
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Voye mesaj..."/>
+    <button onclick="sendMessage()">Voye</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
