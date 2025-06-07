@@ -1,42 +1,47 @@
-
 <!DOCTYPE html>
-<html lang="ht">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Fondasyon</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Chat Fobas ak Pusher</title>
+  <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
+    input, button { padding: 10px; font-size: 16px; }
+  </style>
 </head>
 <body>
-  <div id="login-container">
-    <h2>Antre nan chat la</h2>
-    <input type="email" id="email" placeholder="Imel ou" required/>
-    <input type="password" id="password" placeholder="Modpas ou" required/>
-    <button onclick="login()">Konekte</button>
-  </div>
+  <h2>Chat Fobas (An Tan Reyèl)</h2>
+  <div id="chat"></div>
 
-  <div id="chat-container" style="display:none;">
-    <select id="channel-select">
-      <option value="education">Éducation</option>
-      <option value="fobas">FOBAS</option>
-      <option value="jeunes">Jeunes</option>
-      <option value="chrestiens">Chrétiens</option>
-      <option value="enfants">Enfants</option>
-      <option value="adultes">Adultes</option>
-      <option value="nordouest">Nord-Ouest</option>
-      <option value="marerouge">Mare-Rouge</option>
-      <option value="haiti">Haïti</option>
-    </select>
+  <input type="text" id="message" placeholder="Ekri mesaj ou..." />
+  <button onclick="sendMessage()">Voye</button>
 
-    <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Voye mesaj..."/>
-    <button onclick="sendMessage()">Voye</button>
-  </div>
+  <script>
+    // Aktive log (sèlman pou devlopman)
+    Pusher.logToConsole = true;
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="app.js"></script>
+    var pusher = new Pusher('5c6d93290538e3d2fbda', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      const chatBox = document.getElementById('chat');
+      chatBox.innerHTML += `<p><strong>Mesaj:</strong> ${data.message}</p>`;
+    });
+
+    function sendMessage() {
+      const message = document.getElementById('message').value;
+      fetch('https://votre-backend.repl.co/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message })
+      });
+      document.getElementById('message').value = '';
+    }
+  </script>
 </body>
 </html>
