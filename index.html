@@ -1,47 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Chat Fobas ak Pusher</title>
-  <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
-    input, button { padding: 10px; font-size: 16px; }
-  </style>
-</head>
-<body>
-  <h2>Chat Fobas (An Tan Reyèl)</h2>
-  <div id="chat"></div>
+const express = require("express");
+const Pusher = require("pusher");
+const cors = require("cors");
 
-  <input type="text" id="message" placeholder="Ekri mesaj ou..." />
-  <button onclick="sendMessage()">Voye</button>
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  <script>
-    // Aktive log (sèlman pou devlopman)
-    Pusher.logToConsole = true;
+const pusher = new Pusher({
+  appId: "2004792",
+  key: "5c6d93290538e3d2fbda",
+  secret: "048602b30ec836088197",
+  cluster: "us2",
+  useTLS: true
+});
 
-    var pusher = new Pusher('5c6d93290538e3d2fbda', {
-      cluster: 'us2',
-      forceTLS: true
-    });
+app.post("/send", (req, res) => {
+  const message = req.body.message;
+  pusher.trigger("my-channel", "my-event", {
+    message: message
+  });
+  res.send({ sent: true });
+});
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      const chatBox = document.getElementById('chat');
-      chatBox.innerHTML += `<p><strong>Mesaj:</strong> ${data.message}</p>`;
-    });
-
-    function sendMessage() {
-      const message = document.getElementById('message').value;
-      fetch('https://votre-backend.repl.co/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message })
-      });
-      document.getElementById('message').value = '';
-    }
-  </script>
-</body>
-</html>
+app.listen(3000, () => {
+  console.log("Sèvè ap koute sou pò 3000");
+});
